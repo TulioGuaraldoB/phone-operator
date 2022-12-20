@@ -1,3 +1,4 @@
+using System.IO;
 using System;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
@@ -5,10 +6,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PhoneOperator.Infra.Context;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using PhoneOperator.Application.DependencyInjection;
+using PhoneOperator.Utils;
 
 namespace PhoneOperator
 {
@@ -24,8 +25,14 @@ namespace PhoneOperator
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            SetupDependencies.Configure(services);
+            var root = Directory.GetCurrentDirectory();
+            var dotenv = Path.Combine(root, ".env");
+            DotEnvFile.LoadFile(dotenv);
 
+            var config = new ConfigurationBuilder();
+            config.AddEnvironmentVariables().Build();
+
+            SetupDependencies.Configure(services);
             services.AddControllers().AddJsonOptions(x =>
             {
                 x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
