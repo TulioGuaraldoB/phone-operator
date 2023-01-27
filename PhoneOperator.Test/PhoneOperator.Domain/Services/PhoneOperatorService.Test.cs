@@ -1,7 +1,10 @@
 using Moq;
 using Xunit;
-using PhoneOperator.Domain.Interfaces;
+using System.Collections.Generic;
+using PhoneOperator.Domain.Models;
 using PhoneOperator.Domain.Services;
+using PhoneOperator.Domain.Interfaces;
+using System.Linq;
 
 namespace PhoneOperator.Test.Domain.Services
 {
@@ -12,9 +15,17 @@ namespace PhoneOperator.Test.Domain.Services
         {
             // Arrange
             var mockRepository = new Mock<IPhoneOperatorRepository>();
+            var data = new List<Operator> { new Operator {
+                Id = 12321,
+                Name = "ASfasdfasdf",
+                OperatorCode = 312
+             } }.AsQueryable();
+
+            mockRepository.Setup(r => r.GetAllOperators()).Returns(data.ToList());
 
             // Act
-            var service = new Mock<PhoneOperatorService>(mockRepository.Object);
+            var service = new Mock<IPhoneOperatorService>();
+            service.Setup(s => s.GetAllPhoneOperators()).Returns(mockRepository.Object.GetAllOperators());
             var phoneOperators = service.Object.GetAllPhoneOperators();
 
             // Assert

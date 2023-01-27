@@ -7,7 +7,7 @@ namespace PhoneOperator.Infra.Context
     public class DatabaseContext : DbContext
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
-        public DbSet<Operator> Operators { get; private set; }
+        public virtual DbSet<Operator> Operators { get; private set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
