@@ -15,9 +15,9 @@ namespace PhoneOperator.Infra.Repositories
             _context = context;
         }
 
-        public IQueryable<Operator> GetAllOperators()
+        public List<Operator> GetAllOperators()
         {
-            return _context.Operators.AsQueryable();
+            return _context.Operators.ToList();
         }
 
         public Operator GetOperatorById(int operatorId)
