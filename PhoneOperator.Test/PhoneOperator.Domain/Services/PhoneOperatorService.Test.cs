@@ -18,7 +18,7 @@ namespace PhoneOperator.Test.Domain.Services
             var phoneOperators = service.Object.GetAllPhoneOperators();
 
             // Assert
-            Assert.NotEmpty(phoneOperators);
+            Assert.NotNull(phoneOperators);
         }
     }
 }

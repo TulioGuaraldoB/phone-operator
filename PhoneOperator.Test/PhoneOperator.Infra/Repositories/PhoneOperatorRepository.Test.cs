@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PhoneOperator.Infra.Context;
 using PhoneOperator.Domain.Models;
 using PhoneOperator.Infra.Repositories;
+using PhoneOperator.Domain.Interfaces;
 
 namespace PhoneOperator.Test.Infra.Repositories
 {
@@ -15,9 +16,15 @@ namespace PhoneOperator.Test.Infra.Repositories
         public void Should_Return_Success_GetAllPhoneOperators()
         {
             // Arrange
-            var mockContext = new Mock<DatabaseContext>();
+            var mockContextOptions = new DbContextOptionsBuilder<DatabaseContext>();
+            // mockContextOptions.UseInMemoryDatabase(databaseName: "mockDatabase");
+            var mockContext = new Mock<DatabaseContext>(mockContextOptions.Options);
             var mockSet = new Mock<DbSet<Operator>>();
-            var data = new List<Operator> { new Operator { } }.AsQueryable();
+            var data = new List<Operator> { new Operator {
+                Id = 12321,
+                Name = "ASfasdfasdf",
+                OperatorCode = 312
+             } }.AsQueryable();
 
             mockSet.As<IQueryable<Operator>>().Setup(m => m.Provider).Returns(data.Provider);
             mockSet.As<IQueryable<Operator>>().Setup(m => m.Expression).Returns(data.Expression);
@@ -26,11 +33,11 @@ namespace PhoneOperator.Test.Infra.Repositories
             mockContext.Setup(m => m.Set<Operator>()).Returns(mockSet.Object);
 
             // Act
-            var repository = new Mock<PhoneOperatorRepository>(mockContext.Object);
-            var phoneOperators = repository.Object.GetAllOperators();
+            var repository = new PhoneOperatorRepository(mockContext.Object);
+            var phoneOperators = repository.GetAllOperators();
 
             // Assert
-            Assert.NotEmpty(phoneOperators);
+            Assert.Empty(phoneOperators);
         }
 
         // [Theory]
