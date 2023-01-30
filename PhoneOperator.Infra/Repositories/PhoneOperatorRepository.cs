@@ -18,12 +18,20 @@ namespace PhoneOperator.Infra.Repositories
 
         public List<Operator> GetAllOperators()
         {
-            return _context.Operators.ToList();
+            var operators = _context.Operators
+            .Where(o => o.DeletedAt == null);
+
+            return operators.ToList();
         }
 
         public Operator GetOperatorById(int operatorId)
         {
-            return _context.Operators.Find(operatorId);
+            var phoneOperator = _context.Operators.
+            Where(o => o.Id == operatorId).
+            Where(o => o.DeletedAt == null).
+            First();
+
+            return phoneOperator;
         }
 
         public void InsertOperator(Operator phoneOperator)
