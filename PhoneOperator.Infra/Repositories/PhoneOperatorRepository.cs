@@ -3,6 +3,7 @@ using PhoneOperator.Infra.Context;
 using PhoneOperator.Domain.Interfaces;
 using PhoneOperator.Domain.Models;
 using System.Linq;
+using System;
 
 namespace PhoneOperator.Infra.Repositories
 {
@@ -23,6 +24,22 @@ namespace PhoneOperator.Infra.Repositories
         public Operator GetOperatorById(int operatorId)
         {
             return _context.Operators.Find(operatorId);
+        }
+
+        public void InsertOperator(Operator phoneOperator)
+        {
+            try
+            {
+                if (_context.Operators.Any(o => o.OperatorCode == phoneOperator.OperatorCode))
+                    throw new Exception($"Operator: {phoneOperator.OperatorCode} already exists");
+
+                _context.Operators.Add(phoneOperator);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to insert product. {(ex ?? ex.InnerException).Message}");
+            }
         }
     }
 }

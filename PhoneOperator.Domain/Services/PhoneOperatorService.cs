@@ -24,5 +24,10 @@ namespace PhoneOperator.Domain.Services
         {
             return _phoneOperatorRepository.GetOperatorById(phoneOperatorId);
         }
+
+        public void InsertOperator(Operator phoneOperator)
+        {
+            _phoneOperatorRepository.InsertOperator(phoneOperator);
+        }
     }
 }
