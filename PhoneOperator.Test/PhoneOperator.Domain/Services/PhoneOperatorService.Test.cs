@@ -5,6 +5,7 @@ using PhoneOperator.Domain.Models;
 using PhoneOperator.Domain.Services;
 using PhoneOperator.Domain.Interfaces;
 using System.Linq;
+using System;
 
 namespace PhoneOperator.Test.Domain.Services
 {
@@ -30,6 +31,52 @@ namespace PhoneOperator.Test.Domain.Services
 
             // Assert
             Assert.NotNull(phoneOperators);
+        }
+
+        [Theory]
+        [InlineData(13)]
+        public void Should_Return_Success_GetPhoneOperatorById(int id)
+        {
+            // Arrange
+            var mockPhoneOperatorRepository = new Mock<IPhoneOperatorRepository>();
+            var data = new Operator()
+            {
+                Id = 12321,
+                Name = "ASfasdfasdf",
+                OperatorCode = 312,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+            };
+
+            mockPhoneOperatorRepository.Setup(r => r.GetOperatorById(id)).Returns(data);
+
+            // Act
+            var phoneOperatorService = new Mock<IPhoneOperatorService>();
+            phoneOperatorService.Setup(s => s.GetOperatorById(id)).Returns(mockPhoneOperatorRepository.Object.GetOperatorById(id));
+            var phoneOperator = phoneOperatorService.Object.GetOperatorById(id);
+
+            // Assert
+            Assert.NotNull(phoneOperator);
+        }
+
+        [Fact]
+        public void Should_Return_Success_InsertPhoneOperator()
+        {
+            // Arrange
+            var data = new Operator()
+            {
+                Id = 12321,
+                Name = "ASfasdfasdf",
+                OperatorCode = 312,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+            };
+
+            // Act
+            var phoneOperatorService = new Mock<IPhoneOperatorService>();
+            phoneOperatorService.Setup(s => s.InsertOperator(data));
+
+            // Act
         }
     }
 }
