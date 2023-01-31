@@ -29,5 +29,10 @@ namespace PhoneOperator.Domain.Services
         {
             _phoneOperatorRepository.InsertOperator(phoneOperator);
         }
+
+        public void DeleteOperator(int operatorId)
+        {
+            _phoneOperatorRepository.DeleteOperator(operatorId);
+        }
     }
 }

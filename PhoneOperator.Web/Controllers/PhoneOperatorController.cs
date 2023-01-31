@@ -38,17 +38,24 @@ namespace PhoneOperator.Web.Controllers
         [HttpGet("{id}")]
         public IActionResult GetPhoneOperatorById(int id)
         {
-            var phoneOperator = _phoneOperatorService.GetOperatorById(id);
-            var phoneOperatorRes = new PhoneOperatorResponse
+            try
             {
-                Id = phoneOperator.Id,
-                Name = phoneOperator.Name,
-                OperatorCode = phoneOperator.OperatorCode,
-                CreatedAt = phoneOperator.CreatedAt,
-                UpdatedAt = phoneOperator.UpdatedAt,
-            };
+                var phoneOperator = _phoneOperatorService.GetOperatorById(id);
+                var phoneOperatorRes = new PhoneOperatorResponse
+                {
+                    Id = phoneOperator.Id,
+                    Name = phoneOperator.Name,
+                    OperatorCode = phoneOperator.OperatorCode,
+                    CreatedAt = phoneOperator.CreatedAt,
+                    UpdatedAt = phoneOperator.UpdatedAt,
+                };
 
-            return Ok(phoneOperatorRes);
+                return Ok(phoneOperatorRes);
+            }
+            catch (Exception ex)
+            {
+                return NotFound($"{(ex ?? ex.InnerException).Message}");
+            }
         }
 
         [HttpPost]
@@ -75,8 +82,25 @@ namespace PhoneOperator.Web.Controllers
             {
                 return BadRequest(new
                 {
-                    message = $"Failed to create product. ${(ex ?? ex.InnerException).Message}",
+                    message = $"Failed to create phone operator. ${(ex ?? ex.InnerException).Message}",
                 });
+            }
+        }
+
+        [HttpPatch("remove/{id}")]
+        public IActionResult DeleteOperatorById(int id)
+        {
+            try
+            {
+                _phoneOperatorService.DeleteOperator(id);
+                return Ok(new
+                {
+                    message = "phone operator deleted successfully!"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to delete phone operator. {(ex ?? ex.InnerException).Message}");
             }
         }
     }

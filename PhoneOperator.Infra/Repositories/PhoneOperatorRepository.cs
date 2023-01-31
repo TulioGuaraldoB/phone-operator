@@ -26,12 +26,19 @@ namespace PhoneOperator.Infra.Repositories
 
         public Operator GetOperatorById(int operatorId)
         {
-            var phoneOperator = _context.Operators.
-            Where(o => o.Id == operatorId).
-            Where(o => o.DeletedAt == null).
-            First();
+            try
+            {
+                var phoneOperator = _context.Operators.
+                Where(o => o.Id == operatorId).
+                Where(o => o.DeletedAt == null).
+                First();
 
-            return phoneOperator;
+                return phoneOperator;
+            }
+            catch
+            {
+                throw new Exception("Operator not found.");
+            }
         }
 
         public void InsertOperator(Operator phoneOperator)
@@ -46,7 +53,24 @@ namespace PhoneOperator.Infra.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to insert product. {(ex ?? ex.InnerException).Message}");
+                throw new Exception($"Failed to insert operator. {(ex ?? ex.InnerException).Message}");
+            }
+        }
+
+        public void DeleteOperator(int operatorId)
+        {
+            try
+            {
+                var phoneOperator = _context.Operators.
+                Where(o => o.Id == operatorId).First();
+                phoneOperator.DeletedAt = DateTime.Now;
+
+                _context.Operators.Update(phoneOperator);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to delete operator. {(ex ?? ex.InnerException).Message}");
             }
         }
     }

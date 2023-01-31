@@ -8,5 +8,6 @@ namespace PhoneOperator.Domain.Interfaces
         List<Operator> GetAllOperators();
         Operator GetOperatorById(int operatorId);
         void InsertOperator(Operator phoneOperator);
+        void DeleteOperator(int operatorId);
     }
 }
